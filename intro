@@ -1,6 +1,6 @@
 #Column selection: alt+shift+insert
 
-```
+```ruby
 
 for name in dir():
     if not name.startswith('_'):
