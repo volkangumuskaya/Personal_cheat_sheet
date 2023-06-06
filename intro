@@ -12,7 +12,10 @@ for name in dir():
     if not name.startswith('_'):
         del locals()[name]
 
+```
 import numpy as np
+```
+
 import pandas as pd
 import os
 
