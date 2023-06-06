@@ -1,8 +1,12 @@
 #Column selection: alt+shift+insert
 
+```
+
 for name in dir():
     if not name.startswith('_'):
         del globals()[name]
+
+``` 
 
 for name in dir():
     if not name.startswith('_'):
