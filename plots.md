@@ -1,8 +1,8 @@
-#PLOTS
+# PLOTS
 
 Some plots
 
-# Import libs. Note that ```pio.renderers='svg'``` is needed for pycharm for ```.show```
+## Import libs. Note that ```pio.renderers='svg'``` is needed for pycharm for ```.show```
 
 ```python
 import plotly.express as px
@@ -10,12 +10,12 @@ import plotly.io as pio
 pio.renderers='svg'
 ```
 
-# Histogram simple
+## Histogram simple
 ```python
 df.sepal_length_cm.hist(bins=30, facecolor='green', alpha=0.75)
 ```
 
-# Histogram detailed with plotly
+## Histogram detailed with plotly
 ```python
 fig=px.histogram(df.sepal_length_cm,title="Histogram")
 fig.update_xaxes(title_text="sepal_length_cm")
