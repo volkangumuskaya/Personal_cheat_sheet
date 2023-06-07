@@ -150,4 +150,23 @@ df[~df.duplicated(subset=['int_class'],keep='first')]
 df[~df.duplicated(subset=['int_class'],keep='last')]
 ```
 
+## count per group with a condition (check non NL in 'Dest-cntry' group by 'Orig-cntry'
+```python
+df['nonNL']=(df['Dest-cntry'] != 'NL').groupby(df['Orig-cntry']).transform('sum')
+```
+
+# find max per group row-wise based on simple arithmetics
+```python
+df['max_total'] = pd.concat([df['sepal_length_cm'] + df['sepal_width_cm'], 
+                             df['petal_length_cm'] + df['petal_width_cm']],
+                                    axis=1).max(axis=1)
+```
+
+# compare floats
+```python
+#compare floats
+df['Compare_lengths_tol_0.1']=np.where(np.isclose(df.sepal_length_cm,df.petal_length_cm,atol=0.1),1,0)
+df['Compare_lengths_tol_3']=np.where(np.isclose(df.sepal_length_cm,df.petal_length_cm,atol=3),1,0)
+```
+
 
