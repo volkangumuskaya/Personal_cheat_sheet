@@ -195,7 +195,7 @@ df['sum_sepal_lengths_per_int_class_non_zero_target'] = df['sepal_length_cm'].wh
 df['cut']=pd.cut(df.sepal_length_cm,bins=[0,1,2,3,4,5,6,7,np.inf])
 df['cut_lower']=pd.cut(df.sepal_length_cm,bins=[0,1,2,3,4,5,6,7,np.inf]).map(lambda x: x.left)
 df['cut_upper']=pd.cut(df.sepal_length_cm,bins=[0,1,2,3,4,5,6,7,np.inf]).map(lambda x: x.right)
-df['sepal_length_cut'].value_counts()
+df['cut'].value_counts()
 ```
 
 
