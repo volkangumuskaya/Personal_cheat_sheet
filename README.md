@@ -164,9 +164,40 @@ df['max_total'] = pd.concat([df['sepal_length_cm'] + df['sepal_width_cm'],
 
 # compare floats
 ```python
-#compare floats
 df['Compare_lengths_tol_0.1']=np.where(np.isclose(df.sepal_length_cm,df.petal_length_cm,atol=0.1),1,0)
 df['Compare_lengths_tol_3']=np.where(np.isclose(df.sepal_length_cm,df.petal_length_cm,atol=3),1,0)
 ```
+# rename columns
+```python
+df=df.rename(columns={'Orig-cntry': "origin_country", 'Dest-cntry': "dest_country"})
+```
+
+# groupby and create multiple columns of sum
+```python
+
+cond_positive_target=df.target>0
+df_positive_target_totals = df[cond_positive_target].groupby('int_class',observed=True).\
+    agg({'sepal_length_cm': 'sum',
+         'petal_length_cm': 'sum',}).\
+    reset_index().\
+    rename(columns={'sepal_length_cm':'sum_sepal',
+                    'petal_length_cm':'sum_petal'})
+
+#groupby sums on condition
+df['sum_sepal_lengths_per_int_class'] = df.groupby('int_class')['sepal_length_cm'].transform('sum')
+df['sum_sepal_lengths_per_int_class_non_zero_target'] = df['sepal_length_cm'].where(df['target'] >0).groupby(df['int_class']).transform(
+    'sum')
+
+```
+
+# get cuts based on selected thresholds
+```python
+df['cut']=pd.cut(df.sepal_length_cm,bins=[0,1,2,3,4,5,6,7,np.inf])
+df['cut_lower']=pd.cut(df.sepal_length_cm,bins=[0,1,2,3,4,5,6,7,np.inf]).map(lambda x: x.left)
+df['cut_upper']=pd.cut(df.sepal_length_cm,bins=[0,1,2,3,4,5,6,7,np.inf]).map(lambda x: x.right)
+df['sepal_length_cut'].value_counts()
+```
+
+
 
 
