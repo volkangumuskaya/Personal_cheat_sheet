@@ -9,6 +9,7 @@ import plotly.express as px
 import plotly.io as pio
 pio.renderers='svg'
 ```
+![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/80eb29d9-68f1-4c3d-b36a-dfec3dd459a1)
 
 ## Histogram simple
 ```python
@@ -36,3 +37,128 @@ fig.update_traces(marker_color='green')
 fig.show()
 ```
 
+# Box plot with plotly
+```python
+px.box(df,\
+       x="origin_country", y="sepal_length_cm", color="target",\
+       facet_col='dest_country',\
+       # category_orders={'DT_name':['dt_before_postcodes','dt_before_corridor','dt']},\
+       points='all').show()
+```
+
+# Bar and scatter chart together 
+
+```python
+df['flower_id']=np.arange(0,len(df))
+
+
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
+
+
+fig = make_subplots(specs=[[{"secondary_y": True}]])
+fig.add_trace(
+    go.Bar(x=df.flower_id, y=df.sepal_width_cm,
+           # text=round(metrics.R2, 2),
+           marker_color='light blue', opacity=0.7,
+           name="Sepal_width"),
+    secondary_y=False
+)
+
+fig.add_trace(
+    go.Scatter(x=df.flower_id, y=df.sepal_length_cm,
+               mode='markers', name="Sepal length"),
+    secondary_y=True
+)
+#Optional line
+fig.add_trace(
+    go.Scatter(x=[0,150], y=[0,5])
+)
+
+fig.update_traces(marker=dict(size=10,
+                              line=dict(width=1.5, color='black')),
+                  selector=dict(mode='markers'))
+fig.update_layout(
+    title="Bar and scatter",
+    xaxis_title="Flower ID",
+    yaxis_title="Length",
+    legend_title="Trace type",
+)
+fig.update_yaxes(title_text="Length_2", secondary_y=True)
+fig.update_yaxes(range=[0, 5], secondary_y=False)
+fig.update_yaxes(range=[0, 10], secondary_y=True)
+fig.show()
+```
+# Scatter plot with size and custom markers
+```python
+fig = go.Figure(
+    data=[go.Scatter(x=df.flower_id, y=df.sepal_length_cm, text=df.int_class,
+                     # textposition="top center",
+                     mode='markers+text',
+                    textposition='middle center',
+                     showlegend=False,
+                     marker=dict(
+                         size=df.petal_length_cm,
+                         color=df.target,
+                         sizemode='area',
+                         sizeref=2. * max(df.petal_length_cm,) / (40. ** 2),
+                         sizemin=0,
+                         showscale=True,
+                         colorscale=[(0, "green"), (0.5, "yellow"), (1, "red")],
+                         colorbar=dict(orientation='v', title='target')
+                     )
+                     ),
+          ]
+)
+
+fig.update_layout(title="Title",
+                  xaxis_title='Flower_id',
+                  yaxis_title='Sepal length')
+# fig.layout.update(xaxis_range=[0, 150])
+# fig.layout.update(yaxis_range=[0, 8])
+fig.show()
+```
+
+
+# Save plotly figure offline 
+```python
+#save plotly figure
+import plotly
+#import plotly.offline
+plotly.offline.plot(fig,filename='images\\'+'test.html',auto_open=False)
+```
+
+# Correlations
+```python
+from scipy.stats import pearsonr
+pearsonr(df.sepal_length_cm, df.petal_length_cm)
+df.sepal_length_cm.corr(df.petal_length_cm)
+```python
+
+# weighted correlation
+```python
+def linear_fit_func(x, a, b):
+    return a + b * x
+
+def m_weighted_corr(x, w):
+    """Weighted Mean"""
+    return np.sum(x * w) / np.sum(w)
+
+def cov_weighted_corr(x, y, w):
+    """Weighted Covariance"""
+    return np.sum(w * (x - m_weighted_corr(x, w)) * (y - m_weighted_corr(y, w))) / np.sum(w)
+
+
+def weighted_corr(x, y, w):
+    """Weighted Correlation"""
+    return cov_weighted_corr(x, y, w) / np.sqrt(cov_weighted_corr(x, x, w) * cov_weighted_corr(y, y, w))
+
+weighted_corr(df.dropna().sepal_length_cm,
+              df.dropna().petal_length_cm,
+              len(df.dropna())*[1])
+```
+
+# normality test
+from scipy import stats
+norm_test_arr = np.random.randn(100000)
+stats.shapiro(norm_test_arr)
