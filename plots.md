@@ -9,7 +9,6 @@ import plotly.express as px
 import plotly.io as pio
 pio.renderers='svg'
 ```
-![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/80eb29d9-68f1-4c3d-b36a-dfec3dd459a1)
 
 ## Histogram simple
 ```python
@@ -118,7 +117,7 @@ fig.update_layout(title="Title",
 # fig.layout.update(yaxis_range=[0, 8])
 fig.show()
 ```
-
+![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/80eb29d9-68f1-4c3d-b36a-dfec3dd459a1)
 
 # Save plotly figure offline 
 ```python
