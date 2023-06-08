@@ -49,7 +49,7 @@ px.box(df,\
 ```
 ![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/398d8445-81b4-416d-9911-24d8e2565d03)
 
-# Bar and scatter chart together 
+# Bar and scatter chart together with a fixed line
 
 ```python
 df['flower_id']=np.arange(0,len(df))
