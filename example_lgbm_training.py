@@ -10,14 +10,14 @@ iris = pd.DataFrame(data= np.c_[iris['data'], iris['target']],
 df=iris.copy()
 df['target']=df['target'].astype('category')
 
-# Train LGBM model
+# Import libraries
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import r2_score
 
 import lightgbm as lgb
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 
-
+# Parameters to fit
 lgbm_params = {
     'n_estimators': 10,  # 100, opt 1000
     'max_depth': 6,  # 6, opt 14
@@ -27,32 +27,34 @@ lgbm_params = {
     # 'monotone_constraints': [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] #This is used when we want monotonic constraints for example for regression wrt a feature
 }
 
+# Define features and target
 features = ['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']
 target = "target"
 
-#Change string and object typ[e columns to catgeory for LGBM
+# Change string and object type columns to category for LGBM
 for col in df.columns:
     col_type = df[col].dtype
     if col_type == 'object' or col_type.name == 'string':
         df[col] = df[col].astype('category')
 df.dtypes
 
+# Create X and y
 X = df[features].copy()  # Features table
 y = df[target]  # Target table (Natural logarithm of the target is used!)
 
-# Split randomly
+# Split X and y randomly
 X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=.20,random_state=42)
 
-# Train model
+# Fit model using predetermined parameters
 # lgbr = lgb.LGBMRegressor(**lgbm_params)  # lgbr.get_params()
 lgbr = lgb.LGBMClassifier(**lgbm_params)  # lgbr.get_params()
 lgbr.fit(X_train, Y_train, eval_set=(X_test, Y_test), feature_name='auto', categorical_feature='auto',verbose=1)
 
-# predictions on log scale
+# make predictions 
 pred_test = lgbr.predict(X_test)
 pred_train = lgbr.predict(X_train)
 
-#Accuracy
+#Accuracy on training and test set
 acc_test=(pred_test==Y_test).sum()/len(Y_test)
 acc_train=(pred_train==Y_train).sum()/len(Y_train)
 
@@ -61,7 +63,7 @@ acc_train=(pred_train==Y_train).sum()/len(Y_train)
 # MAPE = np.mean((Y_test - pred_test) / Y_test)  # MAPE on original values
 # MAE = (np.mean((Y_test - pred_test)))  # MAE on test values in percentage
 
-#Hyperparameter tuning 
+# Hyperparameter tuning  with RandomizedSearchCV and GridSearchCV
 search_params = {
     'n_estimators' : [5,10,50],  # 100
     'max_depth' : [6,10,15],  # 6
