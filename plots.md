@@ -14,6 +14,8 @@ pio.renderers='svg'
 ```python
 df.sepal_length_cm.hist(bins=30, facecolor='green', alpha=0.75)
 ```
+![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/41029f63-2332-4bb8-a2b9-ed15fb9d2bd5)
+
 
 ## Histogram detailed with plotly
 ```python
@@ -35,6 +37,7 @@ fig.update_yaxes(range=[0,50])
 fig.update_traces(marker_color='green')
 fig.show()
 ```
+![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/56586666-5fe4-41b9-8789-506b03eb616b)
 
 # Box plot with plotly
 ```python
@@ -44,6 +47,7 @@ px.box(df,\
        # category_orders={'DT_name':['dt_before_postcodes','dt_before_corridor','dt']},\
        points='all').show()
 ```
+![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/398d8445-81b4-416d-9911-24d8e2565d03)
 
 # Bar and scatter chart together 
 
@@ -88,6 +92,8 @@ fig.update_yaxes(range=[0, 5], secondary_y=False)
 fig.update_yaxes(range=[0, 10], secondary_y=True)
 fig.show()
 ```
+![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/83f14eb1-8288-4872-abaf-b92a11bfc755)
+
 # Scatter plot with size and custom markers
 ```python
 fig = go.Figure(
