@@ -125,6 +125,71 @@ fig.show()
 ```
 ![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/80eb29d9-68f1-4c3d-b36a-dfec3dd459a1)
 
+# Subplots with different types
+```python
+fig = make_subplots(1, 2, specs=[[{"secondary_y": True}, {"secondary_y": True}]],
+                    shared_yaxes='all')
+
+fig.add_trace(
+    go.Scatter(x=df.flower_id, y=df.sepal_length_cm,
+               mode='lines+markers',
+               marker=dict(color='red',
+                           size=df.int_class,
+                           sizeref=max(df.int_class) / (4.5 ** 2),
+                           sizemin=0),
+               name='Sepal length'),
+    row=1,
+    col=1,
+    secondary_y=False
+)
+fig.add_trace(
+    go.Bar(x=df.flower_id, y=df.int_class,
+           opacity=0.4,marker={'color':'navy'},
+           name='Class'),
+    row=1,
+    col=1,
+    secondary_y=True
+)
+fig.add_trace(
+    go.Scatter(x=df.flower_id, y=df.petal_length_cm,
+               mode='markers',
+               marker=dict(color='red',
+                           size=df.int_class,
+                           sizeref=max(df.int_class) / (4.5 ** 2),
+                           sizemin=0),
+               name='Petal length'),
+    row=1,
+    col=2,
+    secondary_y=False
+)
+fig.add_trace(
+    go.Bar(x=df.flower_id, y=df.int_class,
+           opacity=0.4,marker={'color':'navy'},
+           name='Class'),
+    row=1,
+    col=2,
+    secondary_y=True
+)
+fig.update_yaxes(showgrid=False, secondary_y=True,range=[0,20])
+fig.show()
+```
+![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/04023f7a-021b-4a1a-bc0d-dd635d4591fa)
+
+# Scatter plot with ordered x-axis
+
+```python
+x_categories= df.sort_values('int_class').flower_id.to_list()
+
+fig=px.scatter(df,x='flower_id',y='petal_length_cm',
+               size='int_class',color='int_class',color_continuous_scale='ylorrd')
+fig.update_xaxes(type="category",categoryorder='array', categoryarray= x_categories)
+fig.update_xaxes(tickangle=90)
+fig.update_traces(marker=dict(line=dict(width=1.5, color='black')))
+fig.show()
+```
+![image](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/69f3a02d-5c93-43d0-a939-4b5b1e400295)
+
+
 # Save plotly figure offline 
 ```python
 #save plotly figure
