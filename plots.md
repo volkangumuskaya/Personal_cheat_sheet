@@ -229,6 +229,8 @@ weighted_corr(df.dropna().sepal_length_cm,
 ```
 
 # normality test
+```python
 from scipy import stats
 norm_test_arr = np.random.randn(100000)
 stats.shapiro(norm_test_arr)
+```
