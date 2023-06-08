@@ -2,7 +2,7 @@
 
 Some plots
 
-## Import libs. Note that ```pio.renderers='svg'``` is needed for pycharm for ```.show```
+### Import libs. Note that ```pio.renderers='svg'``` is needed for pycharm for ```fig.show```. Also quite often when ```fig``` is opened in a browser, you may need to refresh, otherwise it is stuck in loading.
 
 ```python
 import plotly.express as px
