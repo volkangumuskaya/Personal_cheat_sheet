@@ -54,6 +54,9 @@ lgbr.fit(X_train, Y_train, eval_set=(X_test, Y_test), feature_name='auto', categ
 pred_test = lgbr.predict(X_test)
 pred_train = lgbr.predict(X_train)
 
+#predictions as df using index of X_test
+pred_test_df = pd.DataFrame(pred_test, index=X_test.index)
+
 #Accuracy on training and test set
 acc_test=(pred_test==Y_test).sum()/len(Y_test)
 acc_train=(pred_train==Y_train).sum()/len(Y_train)
