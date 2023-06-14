@@ -203,7 +203,7 @@ plotly.offline.plot(fig,filename='images\\'+'test.html',auto_open=False)
 from scipy.stats import pearsonr
 pearsonr(df.sepal_length_cm, df.petal_length_cm)
 df.sepal_length_cm.corr(df.petal_length_cm)
-```python
+```
 
 # weighted correlation
 ```python
