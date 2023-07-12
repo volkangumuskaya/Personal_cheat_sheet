@@ -61,6 +61,60 @@ pred_test_df = pd.DataFrame(pred_test, index=X_test.index)
 acc_test=(pred_test==Y_test).sum()/len(Y_test)
 acc_train=(pred_train==Y_train).sum()/len(Y_train)
 
+#create confusion matrix (as pandas dataframe)
+from sklearn.metrics import accuracy_score,classification_report,plot_confusion_matrix,confusion_matrix
+# LOG Combined_confusion_table regression
+
+classificationReport = classification_report(Y_test,
+                                             pred_test, output_dict=True,
+                                             zero_division=1)
+tmp = pd.DataFrame(classificationReport).transpose()
+
+#Plot single heatmap
+import seaborn as sns
+kwargs = {
+    'cbar': False,
+    'linewidths': 0.2,
+    'linecolor': 'white',
+    'annot': True}
+
+cf_matrix = confusion_matrix(Y_test, pred_test)
+loc_labels=np.unique(Y_test.to_list())
+fig=sns.heatmap(cf_matrix, cmap='Blues', xticklabels=loc_labels, yticklabels=loc_labels, **kwargs, fmt='g')
+fig.set_ylabel('Actual')
+fig.set_xlabel('Predicted')
+fig.title.set_text('PREDICTION \n #preds')
+
+#plot Multiple heatmap
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
+fig, (ax1,ax2,ax3) = plt.subplots(nrows=1, ncols=3, figsize=(21,7))
+kwargs = {
+'cbar': False,
+'linewidths': 0.2,
+'linecolor': 'white',
+'annot': True}
+
+cf_matrix = confusion_matrix(Y_test, pred_test)
+sns.heatmap(cf_matrix, cmap='Blues', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax1, **kwargs,fmt='g')
+ax1.set_ylabel('Actual')
+ax1.set_xlabel('Predicted')
+ax1.title.set_text('PREDICTION \n #preds')
+
+# Normalise
+cf_matrix_normalized  = cf_matrix.astype('float') / cf_matrix.sum(axis=1)[:, np.newaxis]
+sns.heatmap(cf_matrix_normalized, cmap='Reds', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax2, **kwargs,fmt='.0%')
+ax2.set_ylabel('Actual')
+ax2.set_xlabel('Predicted')
+ax2.title.set_text('PREDICTION \n Normalized for actuals -recall')
+# Normalise
+cf_matrix_normalized  = cf_matrix.astype('float') / cf_matrix.sum(axis=0)[np.newaxis,:]
+sns.heatmap(cf_matrix_normalized, cmap='Greens', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax3, **kwargs,fmt='.0%')
+ax3.set_ylabel('Actual')
+ax3.set_xlabel('Predicted')
+ax3.title.set_text('PREDICTION \n Normalized for Predcitions -precision')
+fig.tight_layout()
+
 # Collect Performance metrics on the trained model (not meaning for classification but anyway))
 # R2_test = lgbr.score(X_test, Y_test)  # R2 on test set
 # MAPE = np.mean((Y_test - pred_test) / Y_test)  # MAPE on original values
