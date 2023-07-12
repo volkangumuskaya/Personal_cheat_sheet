@@ -196,6 +196,7 @@ fig.show()
 import plotly
 #import plotly.offline
 plotly.offline.plot(fig,filename='images\\'+'test.html',auto_open=False)
+#fig.savefig("/dbfs/FileStore/filename.png")
 ```
 
 # Correlations
