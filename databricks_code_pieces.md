@@ -30,6 +30,21 @@ group by type,model
 order by count_percent desc
 ```
 
+## more on count and percentage using cte (common table expression)
+```sql
+with cte as (
+  select type,model,
+  count(*) _count
+  from table
+  group by type,model,
+)
+select *,
+SUM(_count) OVER(PARTITION BY type) AS sub_total,
+_count/(SUM(_count) OVER(PARTITION BY type)) +0.00 as _percentage
+from cte
+order by type,model
+```
+
 ## haversine distance
 ```sql
 %sql
@@ -47,6 +62,7 @@ CREATE FUNCTION if NOT EXISTS haversine(Lat1 DOUBLE, Lng1 DOUBLE, Lat2 DOUBLE, L
 dbutils.widgets.text("state", "CA")
 dbutils.widgets.dropdown("state_dd", "CA", ["CA", "IL", "MI", "NY", "OR", "VA"])
 dbutils.widgets.remove("state")
+state_value=str(dbutils.widgets.get("state"))
 ```
 
 ```sql
@@ -61,3 +77,10 @@ order by rand() limit 100
 df=spark.sql("select * from table")
 ```
 
+## write from delta table
+```python
+sdf=spark.sql("select * table")
+
+dbutils.fs.rm(file_path_test[5:],recurse=True)
+sdf.repartition(1).write.format("parquet").mode("overwrite").save(file_path_test[5:])
+```
