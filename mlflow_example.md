@@ -51,6 +51,12 @@ def log_everything(arg1,parent_id):
   mlflow.log_param('now',now)
   mlflow.log_param('parent',0)
   mlflow.log_param('child',1)
+
+  path="/dbfs/FileStore/.../name.html"
+  df.to_html(path)
+  mlflow.log_artifact(path)
+  path="dbfs:/FileStore/.../name.html"
+  dbutils.fs.rm(path)
   mlflow.end_run()
     
   run = mlflow.active_run()
