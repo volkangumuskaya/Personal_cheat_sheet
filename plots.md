@@ -234,3 +234,31 @@ from scipy import stats
 norm_test_arr = np.random.randn(100000)
 stats.shapiro(norm_test_arr)
 ```
+
+# Plot a heatmap from consuion matrix
+```python
+import matplotlib.pyplot as plt
+import seaborn as sns
+#create y_test and y_pred from a list
+data_tmp = [1, 2, 3,1,1,2,3,1,1,2,3,2,2,2,1,1,1,1]
+y_test_example = pd.Series(data_tmp, copy=False)
+data_tmp = [1, 2, 3,1,2,2,3,1,1,1,3,2,3,2,3,1,1,1]
+y_pred_example = pd.Series(data_tmp, copy=False)
+#plot heatmap
+import seaborn as sns
+kwargs = {
+    'cbar': False,
+    'linewidths': 0.2,
+    'linecolor': 'white',
+    'annot': True}
+
+cf_matrix = confusion_matrix(y_test_example, y_pred_example)
+loc_labels=np.unique(y_test_example.to_list())
+fig=sns.heatmap(cf_matrix, cmap='Blues', xticklabels=loc_labels, yticklabels=loc_labels, **kwargs, fmt='g')
+fig.set_ylabel('Actual')
+fig.set_xlabel('Predicted')
+fig.title.set_text('PREDICTION \n #preds')
+```
+
+
+
