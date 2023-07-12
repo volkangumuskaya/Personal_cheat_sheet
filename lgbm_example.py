@@ -50,11 +50,29 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, y, test_size=.20,random_s
 lgbr = lgb.LGBMClassifier(**lgbm_params)  # lgbr.get_params()
 lgbr.fit(X_train, Y_train, eval_set=(X_test, Y_test), feature_name='auto', categorical_feature='auto',verbose=1)
 
+#classification_model = lgb.LGBMClassifier(n_estimators=500,max_depth=-1,max_bin=20,learning_rate=0.05,
+                              min_data_in_leaf=20,num_leaves=10,scale_pos_weight=scale_pos_weight)
+#classification_model.fit(X_train, y_train, eval_set=(X_validate, y_validate), feature_name='auto',
+                                categorical_feature = 'auto',callbacks=[lgb.log_evaluation(0),lgb.early_stopping(early_stop_rounds_reg)])
+
+print('feature importance by gain')
+lgb.plot_importance(lgbr,importance_type='gain',figsize=(6,20),max_num_features=55)
+lgbr.feature_importances_
+
+print('feature importance by split')
+lgb.plot_importance(lgbr,importance_type='split',figsize=(6,20),max_num_features=55)
+lgbr.feature_importances_
+
 # make predictions 
 pred_test = lgbr.predict(X_test)
 pred_train = lgbr.predict(X_train)
 
-#predictions as df using index of X_test
+# make predcitions using customized threshold
+pred_test_customized_threshold=np.where((lgbr.predict_proba(X_test)[:,1] >= 0.5),1,0)
+pred_test_customized_threshold=np.where((lgbr.predict_proba(X_test)[:,1] >= 0.2),1,0)
+pred_test_customized_threshold=np.where((lgbr.predict_proba(X_test)[:,1] >= 0.01),1,0)
+
+# predictions as df using index of X_test
 pred_test_df = pd.DataFrame(pred_test, index=X_test.index)
 
 #Accuracy on training and test set
