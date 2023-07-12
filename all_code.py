@@ -18,7 +18,6 @@ pd.set_option('display.max_rows', 100)
 pd.set_option('max_colwidth',150)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
-
 from sklearn import datasets
 
 # Load the iris dataset
@@ -156,11 +155,9 @@ df['cut'].value_counts()
 
 
 
-######################################
-
-############### PLOTS ################
-
-######################################
+####################################
+###############PLOTS################
+####################################
 
 #Histogram
 import plotly.express as px
@@ -359,12 +356,6 @@ norm_test_arr = np.random.randn(100000)
 stats.shapiro(norm_test_arr)
 
 
-##################################################
-
-############### Train an LGBM model ###############
-
-##################################################
-
 #Train model
 from sklearn import datasets
 import numpy as np
@@ -419,6 +410,8 @@ lgbr.fit(X_train, Y_train, eval_set=(X_test, Y_test), feature_name='auto', categ
 pred_test = lgbr.predict(X_test)
 pred_train = lgbr.predict(X_train)
 
+pred_test_df = pd.DataFrame(pred_test, index=X_test.index)
+
 #Accuracy
 acc_test=(pred_test==Y_test).sum()/len(Y_test)
 acc_train=(pred_train==Y_train).sum()/len(Y_train)
@@ -434,6 +427,111 @@ search_params = {
     'max_depth' : [6,10,15],  # 6
     'learning_rate' : [0.3,0.5],  # 0.3
     }
+
+#create confusion matrix
+from sklearn.metrics import accuracy_score,classification_report,plot_confusion_matrix,confusion_matrix
+# LOG Combined_confusion_table regression
+
+classificationReport = classification_report(Y_test,
+                                             pred_test, output_dict=True,
+                                             zero_division=1)
+tmp = pd.DataFrame(classificationReport).transpose()
+
+
+#plot heatmap
+import seaborn as sns
+kwargs = {
+    'cbar': False,
+    'linewidths': 0.2,
+    'linecolor': 'white',
+    'annot': True}
+
+cf_matrix = confusion_matrix(Y_test, pred_test)
+loc_labels=np.unique(Y_test.to_list())
+fig=sns.heatmap(cf_matrix, cmap='Blues', xticklabels=loc_labels, yticklabels=loc_labels, **kwargs, fmt='g')
+fig.set_ylabel('Actual')
+fig.set_xlabel('Predicted')
+fig.title.set_text('PREDICTION \n #preds')
+
+#plot multiple heatmap
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
+fig, (ax1,ax2,ax3) = plt.subplots(nrows=1, ncols=3, figsize=(21,7))
+kwargs = {
+'cbar': False,
+'linewidths': 0.2,
+'linecolor': 'white',
+'annot': True}
+
+cf_matrix = confusion_matrix(Y_test, pred_test)
+sns.heatmap(cf_matrix, cmap='Blues', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax1, **kwargs,fmt='g')
+ax1.set_ylabel('Actual')
+ax1.set_xlabel('Predicted')
+ax1.title.set_text('PREDICTION \n #preds')
+
+# Normalise
+cf_matrix_normalized  = cf_matrix.astype('float') / cf_matrix.sum(axis=1)[:, np.newaxis]
+sns.heatmap(cf_matrix_normalized, cmap='Reds', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax2, **kwargs,fmt='.0%')
+ax2.set_ylabel('Actual')
+ax2.set_xlabel('Predicted')
+ax2.title.set_text('PREDICTION \n Normalized for actuals -recall')
+# Normalise
+cf_matrix_normalized  = cf_matrix.astype('float') / cf_matrix.sum(axis=0)[np.newaxis,:]
+sns.heatmap(cf_matrix_normalized, cmap='Greens', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax3, **kwargs,fmt='.0%')
+ax3.set_ylabel('Actual')
+ax3.set_xlabel('Predicted')
+ax3.title.set_text('PREDICTION \n Normalized for Predcitions -precision')
+fig.tight_layout()
+
+#create y_test and y_pred from a list
+data_tmp = [1, 2, 3,1,1,2,3,1,1,2,3,2,2,2,1,1,1,1]
+y_test_example = pd.Series(data_tmp, copy=False)
+data_tmp = [1, 2, 3,1,2,2,3,1,1,1,3,2,3,2,3,1,1,1]
+y_pred_example = pd.Series(data_tmp, copy=False)
+#plot heatmap
+import seaborn as sns
+kwargs = {
+    'cbar': False,
+    'linewidths': 0.2,
+    'linecolor': 'white',
+    'annot': True}
+
+cf_matrix = confusion_matrix(y_test_example, y_pred_example)
+loc_labels=np.unique(y_test_example.to_list())
+fig=sns.heatmap(cf_matrix, cmap='Blues', xticklabels=loc_labels, yticklabels=loc_labels, **kwargs, fmt='g')
+fig.set_ylabel('Actual')
+fig.set_xlabel('Predicted')
+fig.title.set_text('PREDICTION \n #preds')
+
+#plot multiple heatmap
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
+fig, (ax1,ax2,ax3) = plt.subplots(nrows=1, ncols=3, figsize=(21,7))
+kwargs = {
+'cbar': False,
+'linewidths': 0.2,
+'linecolor': 'white',
+'annot': True}
+
+cf_matrix = confusion_matrix(y_test_example, y_pred_example)
+sns.heatmap(cf_matrix, cmap='Blues', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax1, **kwargs,fmt='g')
+ax1.set_ylabel('Actual')
+ax1.set_xlabel('Predicted')
+ax1.title.set_text('PREDICTION \n #preds')
+
+# Normalise
+cf_matrix_normalized  = cf_matrix.astype('float') / cf_matrix.sum(axis=1)[:, np.newaxis]
+sns.heatmap(cf_matrix_normalized, cmap='Reds', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax2, **kwargs,fmt='.0%')
+ax2.set_ylabel('Actual')
+ax2.set_xlabel('Predicted')
+ax2.title.set_text('PREDICTION \n Normalized for actuals -recall')
+# Normalise
+cf_matrix_normalized  = cf_matrix.astype('float') / cf_matrix.sum(axis=0)[np.newaxis,:]
+sns.heatmap(cf_matrix_normalized, cmap='Greens', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax3, **kwargs,fmt='.0%')
+ax3.set_ylabel('Actual')
+ax3.set_xlabel('Predicted')
+ax3.title.set_text('PREDICTION \n Normalized for Predcitions -precision')
+fig.tight_layout()
 
 # Randomized search
 lgb_CV = RandomizedSearchCV(estimator=lgb.LGBMClassifier(), param_distributions=search_params,
