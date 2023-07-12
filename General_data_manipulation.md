@@ -198,6 +198,16 @@ df['cut_upper']=pd.cut(df.sepal_length_cm,bins=[0,1,2,3,4,5,6,7,np.inf]).map(lam
 df['cut'].value_counts()
 ```
 
+# map one column to another
+```python
+conditions = [(df['target'] == 0),
+              (df['target'] == 1),
+              (df['target'] == 2)]
+choices = ['zero', 'one', 'two']
+df['order'] = np.select(conditions, choices)
+```
+df.sort_values(by='order')
+
 
 
 
