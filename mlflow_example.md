@@ -1,4 +1,4 @@
-### In this `MLflow` example we run a notebook from another notebook and log with parent-child nested structure
+### In this example we run a notebook in `Databricks` from another notebook, and log with parent-child nested structure using `MLflow`
 
 # Notebook1: Main run
 
