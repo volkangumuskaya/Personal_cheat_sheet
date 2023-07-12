@@ -3,7 +3,7 @@
 # Notebook1: Main run
 
 ```python
-mlflow.set_experiment('/Users/vmahawal@fedex.com/0.1 IB Volume Visibility/Scale_up_stress_tests/Serial runs/tmp/Serial_run_tests')
+mlflow.set_experiment(experiment_path)
 mlflow.start_run(run_name='parent_run_from_main',nested=True)
 
 now = datetime.datetime.now()
@@ -45,7 +45,7 @@ def log_everything(arg1,parent_id):
   except:
     print('..')
   
-  mlflow.set_experiment([experiment path])
+  mlflow.set_experiment(experiment_path)
   mlflow.start_run(run_id=parent_id,nested=True)
   mlflow.start_run(run_name='run_name',nested=True)
   mlflow.log_param('now',now)
