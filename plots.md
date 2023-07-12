@@ -253,12 +253,48 @@ kwargs = {
     'annot': True}
 
 cf_matrix = confusion_matrix(y_test_example, y_pred_example)
+tmp = pd.DataFrame(cf_matrix).transpose()
+
 loc_labels=np.unique(y_test_example.to_list())
 fig=sns.heatmap(cf_matrix, cmap='Blues', xticklabels=loc_labels, yticklabels=loc_labels, **kwargs, fmt='g')
 fig.set_ylabel('Actual')
 fig.set_xlabel('Predicted')
 fig.title.set_text('PREDICTION \n #preds')
 ```
+![Figure_1](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/0bc8cc67-d1fb-448e-a740-e9e85a8108a0)
+
+# plot multiple heatmap
+```python
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import figure
+fig, (ax1,ax2,ax3) = plt.subplots(nrows=1, ncols=3, figsize=(21,7))
+kwargs = {
+'cbar': False,
+'linewidths': 0.2,
+'linecolor': 'white',
+'annot': True}
+
+cf_matrix = confusion_matrix(y_test_example, y_pred_example)
+sns.heatmap(cf_matrix, cmap='Blues', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax1, **kwargs,fmt='g')
+ax1.set_ylabel('Actual')
+ax1.set_xlabel('Predicted')
+ax1.title.set_text('PREDICTION \n #preds')
+
+# Normalise
+cf_matrix_normalized  = cf_matrix.astype('float') / cf_matrix.sum(axis=1)[:, np.newaxis]
+sns.heatmap(cf_matrix_normalized, cmap='Reds', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax2, **kwargs,fmt='.0%')
+ax2.set_ylabel('Actual')
+ax2.set_xlabel('Predicted')
+ax2.title.set_text('PREDICTION \n Normalized for actuals -recall')
+# Normalise
+cf_matrix_normalized  = cf_matrix.astype('float') / cf_matrix.sum(axis=0)[np.newaxis,:]
+sns.heatmap(cf_matrix_normalized, cmap='Greens', xticklabels=loc_labels, yticklabels=loc_labels, ax=ax3, **kwargs,fmt='.0%')
+ax3.set_ylabel('Actual')
+ax3.set_xlabel('Predicted')
+ax3.title.set_text('PREDICTION \n Normalized for Predcitions -precision')
+fig.tight_layout()
+```
+![Figure_1](https://github.com/volkangumuskaya/Personal_cheat_sheet/assets/54629964/2ee5ea83-ebe8-48fe-b39f-2fa26f980103)
 
 
 
