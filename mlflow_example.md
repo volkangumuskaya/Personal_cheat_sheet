@@ -52,6 +52,8 @@ def log_everything(arg1,parent_id):
   mlflow.log_param('parent',0)
   mlflow.log_param('child',1)
 
+mlflow.log_artifact("/dbfs/FileStore/..."+pngname+".png")
+
   path="/dbfs/FileStore/.../name.html"
   df.to_html(path)
   mlflow.log_artifact(path)
