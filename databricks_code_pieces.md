@@ -59,6 +59,14 @@ from cte
 order by type,model
 ```
 
+##time date
+```sql
+CASE 
+     WHEN timestampdiff(minute, manifestCreationTime_local, latest_time_local) >=0 THEN timestampdiff(minute, manifestCreationTime_local, latest_time_local)
+     ELSE timestampdiff(minute, manifestCreationTime_local, latest_time_local)+24*60
+END as critical_window_in_minutes
+```
+
 ## haversine distance
 ```sql
 %sql
@@ -120,4 +128,17 @@ usersDF = (spark.read
   .option("header", True)
   .option("inferSchema", True)
   .csv(path))
+
+file_path = 'abfss://....csv'
+df = spark.read.format("csv").option("header", True).load(file_path)
+display(df)
+
+df.write.format("delta").mode("overwrite").saveAsTable("table_name")
+```
+
+# replace spaces in all columns in sparkDF
+```python
+from pyspark.sql import functions as F
+df = df.select([F.col(col).alias(col.replace(' ', '_')) for col in df.columns])
+display(df)
 ```
