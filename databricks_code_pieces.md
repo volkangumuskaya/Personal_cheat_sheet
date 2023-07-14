@@ -8,6 +8,20 @@ set spark.databricks.optimizer.adaptive.enabled=True
 ```python
 spark.conf.set('spark.sql.shuffle.partitions','auto')
 ```
+# browsing the file store
+```python
+dbutils.fs.ls('dbfs:/FileStore/')
+```
+# removing file
+```python
+dbutils.fs.rm('dbfs:/FileStore/jars/yourfile.egg')
+```
+# move file
+```python
+# dest_path = 'abfss://...'
+# orig_path='/FileStore/fig.html'
+# dbutils.fs.mv(orig_path,dest_path,False)
+```
 
 # some basic sql
 ```sql
@@ -83,4 +97,27 @@ sdf=spark.sql("select * table")
 
 dbutils.fs.rm(file_path_test[5:],recurse=True)
 sdf.repartition(1).write.format("parquet").mode("overwrite").save(file_path_test[5:])
+```
+
+# create paequet file
+```sql
+CREATE TABLE IF NOT EXISTS db.table
+USING PARQUET
+LOCATION path
+AS
+SELECT * FROM db.source_table
+```
+
+# read/write 
+```python
+df.coalesce(1).write.parquet(".....parquet")
+df = spark.read.format("parquet").load(".....parquet")
+df.coalesce(1).write.format("com.databricks.spark.csv").option("header", "true").save(".....csv")
+
+
+usersDF = (spark.read
+  #.option("sep", "\c")
+  .option("header", True)
+  .option("inferSchema", True)
+  .csv(path))
 ```
